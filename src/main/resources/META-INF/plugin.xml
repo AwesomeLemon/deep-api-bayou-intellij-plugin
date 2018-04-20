@@ -1,0 +1,32 @@
+<idea-plugin>
+    <id>com.github.awesomelemon.deep-api-plugin</id>
+    <name>Code generation</name>
+    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+
+    <description><![CDATA[
+    Enter short description for your plugin here.<br>
+    <em>most HTML tags may be used</em>
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <intentionAction>
+            <className>com.github.awesomelemon.GenerateIntentionAction</className>
+            <category>Other</category>
+            <descriptionDirectoryName>GenerateIntentionAction</descriptionDirectoryName>
+
+        </intentionAction>
+    </extensions>
+
+    <actions>
+        <group id="MyPlugin.SampleMenu" text="Greeting" description="Greeting menu">
+            <add-to-group group-id="MainMenu" anchor="last"/>
+            <action id="Myplugin.Textboxes" class="com.github.awesomelemon.HelloAction" text="Hello" description="Says hello"/>
+        </group>
+    </actions>
+</idea-plugin>

@@ -1,0 +1,69 @@
+buildscript {
+    ext.kotlin_version = '1.2.30'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+plugins {
+    id 'org.jetbrains.intellij' version '0.3.1'
+}
+
+group 'com.github.awesomelemon'
+version '1.0-SNAPSHOT'
+
+
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+//    jcenter()
+//    flatDir {
+//        dirs '/home/alex/IdeaProjects/deep-api-plugin/libs'
+//    }
+    mavenLocal()
+}
+
+apply plugin: 'java'
+
+//sourceSets {
+//    main {
+//        java {
+//            srcDir 'src/main/java'
+//        }
+//    }
+//}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile "tanvd:bayou-implementation:1.1.0"
+//    compile name: 'bayou-plugin'
+//    compile "com.tanvd"
+//    compile name: 'bayou-implementation'
+//    compile files("/home/alex/IdeaProjects/bayou-integration/out/artifacts/bayou_plugin_jar/bayou-plugin.jar")
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+intellij {
+    version '2018.1'
+}
+patchPluginXml {
+    changeNotes """
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>"""
+}
