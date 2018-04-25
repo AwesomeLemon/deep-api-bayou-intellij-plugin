@@ -75,6 +75,8 @@ public class GenerateIntentionAction extends PsiElementBaseIntentionAction imple
         BayouModelFacade bayouModelFacade = new BayouModelFacade(project);
         DeepApiModelFacade deepApiModelFacade = new DeepApiModelFacade();
         ApiCallSequence bayouInput = deepApiModelFacade.generateBayouInput(request);
+        System.out.println(bayouInput.getApiMethods());
+        System.out.println(bayouInput.getApiTypes());
         ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> bayouModelFacade.generate(bayouInput, getContainingMethod(comment)),
                 "dsjall", true, project);
 //        final int offset = editor.getCaretModel().getOffset();

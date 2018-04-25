@@ -1,8 +1,60 @@
 package com.github.awesomelemon;
 
+import org.tensorflow.SavedModelBundle;
+import org.tensorflow.Session;
+import org.tensorflow.Tensor;
+import org.tensorflow.TensorFlow;
+
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Paths;
+import java.util.List;
+
 public class DeepApiModelFacade {
+
+    private final Session.Runner runner;
+
+    public DeepApiModelFacade() {
+        TensorFlow.loadLibrary("/home/alex/IdeaProjects/deep-api-plugin/_beam_search_ops.so16");
+        System.out.println(Paths.get(".").toAbsolutePath().normalize().toString());
+        SavedModelBundle model = SavedModelBundle.load("/home/alex/IdeaProjects/deep-api-plugin/src/main/resources/deep-api-model16", "serve");
+        runner = model.session().runner();
+    }
+
     private String generate(String input) {
-        return "Random.nextInt";
+        String[] tokens = input.split(" ");
+        byte[][][] matrix = new byte[1][tokens.length][];
+        for (int i = 0; i < tokens.length; i++) {
+            try {
+                matrix[0][i] = tokens[i].getBytes("UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        Tensor<String> inputCallsTensor = Tensor.create(matrix, String.class);
+
+        int[] ints = {tokens.length};
+        Tensor<?> inputLengthTensor = Tensor.create(ints);
+
+        runner.feed("Placeholder_1:0", inputLengthTensor);
+        runner.feed("Placeholder:0", inputCallsTensor);
+        List<Tensor<?>> results = runner.fetch("seq2seq/index_to_string_Lookup:0").run();
+        Tensor<?> tensor = results.get(0);
+        long[] shape = tensor.shape();
+        int alternativesNum = (int) shape[1];
+        int resultingTokensNum = (int) shape[2];
+        byte[][][][] outMatr = new byte[1][alternativesNum][resultingTokensNum][];
+        tensor.copyTo(outMatr);
+        for (int i = 0; i < alternativesNum; i++) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int j = 0; j < resultingTokensNum; j++) {
+                String word = new String(outMatr[0][i][j]);
+                if (word.equals("</s>")) break;
+                stringBuilder.append(word);
+                stringBuilder.append(" ");
+            }
+            return stringBuilder.toString();
+        }
+        return null;
     }
 
     public ApiCallSequence generateBayouInput(String input) {

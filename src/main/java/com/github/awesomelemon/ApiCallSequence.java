@@ -28,11 +28,12 @@ public class ApiCallSequence {
             String[] typeAndMethod = separatedCall.split("\\.");
             assert typeAndMethod.length == 2;
             apiTypes.add(typeAndMethod[0]);
-            apiMethods.add(typeAndMethod[1]);
+            if (!typeAndMethod[1].equals("new")) {
+                apiMethods.add(typeAndMethod[1]);
+            }
         }
         this.apiMethods = apiMethods;
         this.apiTypes = apiTypes;
     }
-
 
 }
