@@ -77,7 +77,7 @@ public class GenerateIntentionAction extends PsiElementBaseIntentionAction imple
     public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException {
         ProgressManager.getInstance().run(new Task.Backgroundable(project, "daf") {
             public void run(ProgressIndicator indicator) {
-                indicator.setText("This is how you update the indicator");
+                indicator.setText("5 kilos of mushrooms and cellphone");
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
