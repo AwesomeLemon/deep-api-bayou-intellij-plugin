@@ -1,6 +1,6 @@
 package com.github.awesomelemon.Bayou;
 
-import com.github.awesomelemon.ApiCallSequence;
+import com.github.awesomelemon.DeepAPI.ApiCallSequence;
 
 import java.util.List;
 

@@ -27,6 +27,7 @@ public class BayouSynthesizer {
 
     BayouResponse invoke(BayouSynthesizerType type, BayouRequest request, SynthesisProgress progress) {
         if (!models.containsKey(type)) {
+            System.out.println("not contains");
             System.out.println(type.name().toLowerCase()+"/config.json");
             SynthesizingModel model = BayouClient.INSTANCE.getConfigurableModel(
                     Utils.convertStreamToString(
@@ -40,6 +41,7 @@ public class BayouSynthesizer {
                 BayouTextConverter.INSTANCE.toProgramText(request),
                 100, progress)) {
             if (Utils.isNotBlank(synthesized)) {
+                System.gc();
                 return BayouTextConverter.INSTANCE.fromProgramText(synthesized);
             }
         }

@@ -1,6 +1,6 @@
 package com.github.awesomelemon.Bayou;
 
-import com.github.awesomelemon.ApiCallSequence;
+import com.github.awesomelemon.DeepAPI.ApiCallSequence;
 import com.github.awesomelemon.Utils;
 import com.intellij.openapi.application.ApplicationManager;
 //import com.intellij.openapi.progress.ProgressIndicator;
@@ -20,21 +20,30 @@ import java.util.List;
 //import tanvd.bayou.prototype.ProgressIndicatorWrapper;
 
 
-public class BayouModelFacade {
+public class BayouModelFacade implements Runnable {
     Project project;
+    ApiCallSequence input;
+    PsiMethod method;
 
-    public BayouModelFacade(Project project) {
+    public Project getProject() {
+        return project;
+    }
+
+    public BayouModelFacade(Project project, ApiCallSequence input, PsiMethod method) {
         this.project = project;
+        this.input = input;
+        this.method = method;
     }
 
-    public void generate(ApiCallSequence input, PsiMethod method) {
-        ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
-        processMethodChe(method, input, indicator);
-
-    }
+//    public static void generate(ApiCallSequence input,PsiMethod method, Project project) {
+//        ProgressManager.getInstance().runProcessWithProgressSynchronously(
+//                new BayouModelFacade(project, input, method), "abc", true, project);
+//
+//    }
 
     public boolean processMethodChe(PsiMethod method, ApiCallSequence apiCallSequence, ProgressIndicator indicator) {
         BayouSynthesizerType model = BayouSynthesizerType.StdLib;
+//        BayouSynthesizerType model = BayouSynthesizerType.Android;
 
 //        val apiCalls = ArrayList<String>()
 //        val apiTypes = ArrayList<String>()
@@ -63,13 +72,23 @@ public class BayouModelFacade {
             }
             ApplicationManager.getApplication().invokeLater(() ->
                     PsiUtils.INSTANCE.executeWriteAction(project, method.getContainingFile(), () -> {
-                        PsiCodeBlock body = method.getBody();
-                        if (body != null) body.replace(codeBlock);
-                        PsiUtils.INSTANCE.reformatFile(method.getContainingFile(), project);
-                        return Unit.INSTANCE;
-                    }
-            ));
+                                PsiCodeBlock body = method.getBody();
+                                if (body != null) body.add(codeBlock);
+                                PsiUtils.INSTANCE.reformatFile(method.getContainingFile(), project);
+                                return Unit.INSTANCE;
+                            }
+                    ));
         }
         return false;
     }
+
+    @Override
+    public void run() {
+        ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
+        indicator.setText2("asdflkj");
+        indicator.setText("asdflkj");
+        indicator.setFraction(0.5);
+        processMethodChe(method, input, indicator);
+    }
+
 }
