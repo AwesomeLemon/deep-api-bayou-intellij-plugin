@@ -13,30 +13,31 @@ public class ModelProvider {
     private final Path pluginTmpDir = Paths.get(tmpDir, "deep_api_plugin");
     private final String modelUrl = "https://www.dropbox.com/s/qh4kh6yy7d4jm2q/deep-api-tensorflow-modelA.zip?dl=1";
     final String zipName = "model.zip";
-    private final String beamOpsLinux = "_beam_search_ops_linux.so";
-    private final String beamOpsMacos = "_beam_search_ops_macos.so";
-    private final String beamOpsWindows = "_beam_search_ops.dll";
+//    private final String beamOpsLinux = "_beam_search_ops_linux.so";
+//    private final String beamOpsMacos = "_beam_search_ops_macos.so";
+//    private final String beamOpsWindows = "_beam_search_ops.dll";
     private final String exportedModelDir = "deep-api-model";
 
     public ModelProvider() {
         try {
             OsCheck.OSType osType = OsCheck.getOperatingSystemType();
-            if (!(osType.equals(OsCheck.OSType.Linux) || osType.equals(OsCheck.OSType.Windows))) {
-                throw new RuntimeException("Only Windows and Linux are supported right now");
+            if (!(osType.equals(OsCheck.OSType.Linux) || osType.equals(OsCheck.OSType.Windows)
+                    || osType.equals(OsCheck.OSType.MacOS))) {
+                throw new RuntimeException("Only Windows, Linux, MacOS are supported!");
             }
-            if (!pluginTmpDir.toFile().exists()) {
+            if (!Files.exists(pluginTmpDir)) {
                 pluginTmpDir.toFile().mkdir();
                 Path path = downloadTo(new URL(modelUrl), Paths.get(pluginTmpDir.toString(), zipName));
                 extractSubDir(path, pluginTmpDir);
             } else {
                 Path modelDir = pluginTmpDir.resolve(exportedModelDir);
 
-                String beamOps = null;
-                if (osType.equals(OsCheck.OSType.Linux)) beamOps = beamOpsLinux;
-                if (osType.equals(OsCheck.OSType.Windows)) beamOps = beamOpsWindows;
-                Path beamOpPath = pluginTmpDir.resolve(beamOps);
+//                String beamOps = null;
+//                if (osType.equals(OsCheck.OSType.Linux)) beamOps = beamOpsLinux;
+//                if (osType.equals(OsCheck.OSType.Windows)) beamOps = beamOpsWindows;
+//                Path beamOpPath = pluginTmpDir.resolve(beamOps);
 
-                if (!Files.exists(modelDir) || !Files.exists(beamOpPath)) {
+                if (!Files.exists(modelDir) /*|| !Files.exists(beamOpPath)*/) {
                     Path zipPath = pluginTmpDir.resolve(zipName);
                     if (!Files.exists(zipPath)) {
                         zipPath = downloadTo(new URL(modelUrl), Paths.get(pluginTmpDir.toString(), zipName));
@@ -44,9 +45,6 @@ public class ModelProvider {
                     extractSubDir(zipPath, pluginTmpDir);
                 }
             }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -65,19 +63,19 @@ public class ModelProvider {
                 Files.createDirectories(targetPath.getParent());
 
                 // And extract the file
-                Files.copy(filePath, targetPath);
+                Files.copy(filePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
 
                 return FileVisitResult.CONTINUE;
             }
         });
     }
 
-    public String getBeamOpsPath() {
-        String beamOps = null;
-        if (OsCheck.getOperatingSystemType().equals(OsCheck.OSType.Linux)) beamOps = beamOpsLinux;
-        else beamOps = beamOpsWindows;
-        return Paths.get(pluginTmpDir.toString(), beamOps).toString();
-    }
+//    public String getBeamOpsPath() {
+//        String beamOps = null;
+//        if (OsCheck.getOperatingSystemType().equals(OsCheck.OSType.Linux)) beamOps = beamOpsLinux;
+//        else beamOps = beamOpsWindows;
+//        return Paths.load(pluginTmpDir.toString(), beamOps).toString();
+//    }
 
     public String getExportedModelPath() {
         return Paths.get(pluginTmpDir.toString(), exportedModelDir).toString();

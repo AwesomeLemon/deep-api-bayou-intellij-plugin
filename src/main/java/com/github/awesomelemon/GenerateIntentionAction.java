@@ -20,7 +20,6 @@ public class GenerateIntentionAction extends PsiElementBaseIntentionAction imple
 
     private static final String INTENTION_PREFIX = "//";
     private BayouModelFacade bayouModelFacade;
-    private DeepApiModelFacade deepApiModelFacade;
 
     @NotNull
     public String getText() {
@@ -54,45 +53,37 @@ public class GenerateIntentionAction extends PsiElementBaseIntentionAction imple
     }
 
     public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException {
-        ProgressManager.getInstance().run(new Task.Backgroundable(project, "daf") {
-            public void run(ProgressIndicator indicator) {
-                indicator.setText("5 kilos of mushrooms and cellphone");
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                indicator.setFraction(0.5);  // halfway done
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        ProgressManager.getInstance().run(new Task.Backgroundable(project, "daf") {
+//            public void run(ProgressIndicator indicator) {
+//                indicator.setText("5 kilos of mushrooms and cellphone");
+//                try {
+//                    Thread.sleep(2000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                indicator.setFraction(0.5);  // halfway done
+//                try {
+//                    Thread.sleep(2000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
         PsiComment comment = asComment(element);
         String request = comment.getText().substring(INTENTION_PREFIX.length());
         System.out.println(request);
-//        if (this.bayouModelFacade == null || !this.bayouModelFacade.getProject().equals(project)) {
-//        }
-        if (this.deepApiModelFacade == null) {
-            this.deepApiModelFacade = new DeepApiModelFacade();
-        }
-        ApiCallSequence bayouInput = deepApiModelFacade.generateBayouInput(request);
-        System.out.println(bayouInput.getApiMethods());
-        System.out.println(bayouInput.getApiTypes());
-        ProgressManager instance = ProgressManager.getInstance();
         PsiMethod containingMethod = getContainingMethod(comment);
-        instance.run(new Task.Backgroundable(project, "Abc", true) {
+
+        ProgressManager.getInstance().run(new Task.Backgroundable(project, "DeepAPI-Bayou Code Generation", true) {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
+                DeepApiModelFacade deepApiModelFacade = DeepApiModelFacade.load(project);
+                ApiCallSequence bayouInput = deepApiModelFacade.generateBayouInput(request);
+                System.out.println(bayouInput.getApiMethods());
+                System.out.println(bayouInput.getApiTypes());
                 new BayouModelFacade(project, bayouInput, containingMethod).run();
             }
         });
         System.out.println("done!");
-    }
-
-    public boolean startInWriteAction() {
-        return false;
     }
 }
