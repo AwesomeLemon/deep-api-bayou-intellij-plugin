@@ -6,7 +6,7 @@ import com.intellij.openapi.progress.ProgressIndicator
 import tanvd.bayou.implementation.facade.SynthesisPhase
 import tanvd.bayou.implementation.facade.SynthesisProgress
 
-class ProgressIndicatorWrapper(val p: ProgressIndicator): SynthesisProgress {
+class BayouProgressIndicatorWrapper(val p: ProgressIndicator): SynthesisProgress {
     override var fraction: Double = 0.0
         set(value) {
             field = value

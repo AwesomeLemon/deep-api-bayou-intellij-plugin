@@ -1,16 +1,10 @@
 package com.github.awesomelemon.deepapi;
 
 import com.github.awesomelemon.ModelProvider;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
-import org.tensorflow.TensorFlow;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -20,19 +14,19 @@ public class DeepApiModelFacade {
     private final SavedModelBundle model;
     private static DeepApiModelFacade INSTANCE = null;
 
-    private DeepApiModelFacade() {
-        ModelProvider modelProvider = new ModelProvider();
+    private DeepApiModelFacade(ProgressIndicator progressIndicator) {
+        ModelProvider modelProvider = new ModelProvider(new DeepApiDownloadProgressIndicatorWrapper(progressIndicator));
 //        TensorFlow.loadLibrary(modelProvider.getBeamOpsPath());
         model = SavedModelBundle.load(modelProvider.getExportedModelPath(), "serve");
     }
 
-    public static DeepApiModelFacade load(Project project) {
+    public static DeepApiModelFacade load(ProgressIndicator progressIndicator) {
         if (INSTANCE == null) {
 //            ProgressManager instance = ProgressManager.getInstance();
 //            instance.run(new Task.Backgroundable(project, "DeepAPI Model Download", true) {
 //                @Override
 //                public void run(@NotNull ProgressIndicator indicator) {
-                    INSTANCE = new DeepApiModelFacade();
+                    INSTANCE = new DeepApiModelFacade(progressIndicator);
 //                    ApplicationManager.getApplication().invokeLater()
 //                }
 //            });

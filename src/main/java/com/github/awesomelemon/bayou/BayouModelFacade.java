@@ -18,7 +18,7 @@ import com.github.awesomelemon.PsiUtils;
 import java.util.ArrayList;
 import java.util.List;
 //import tanvd.bayou.prototype.annotations.*;
-//import tanvd.bayou.prototype.ProgressIndicatorWrapper;
+//import tanvd.bayou.prototype.BayouProgressIndicatorWrapper;
 
 
 public class BayouModelFacade implements Runnable {
@@ -58,7 +58,7 @@ public class BayouModelFacade implements Runnable {
 
         if (!apiCallSequence.getApiMethods().isEmpty()) {
             BayouResponse response = BayouSynthesizer.get().invoke(model, new BayouRequest(inputParams, apiCallSequence),
-                    new ProgressIndicatorWrapper(indicator));
+                    new BayouProgressIndicatorWrapper(indicator));
             final PsiCodeBlock codeBlock;
             if (response != null) {
                 String code = response.getCode();

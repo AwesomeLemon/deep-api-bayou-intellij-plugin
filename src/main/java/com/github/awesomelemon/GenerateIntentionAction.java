@@ -77,7 +77,7 @@ public class GenerateIntentionAction extends PsiElementBaseIntentionAction imple
         ProgressManager.getInstance().run(new Task.Backgroundable(project, "DeepAPI-Bayou Code Generation", true) {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
-                DeepApiModelFacade deepApiModelFacade = DeepApiModelFacade.load(project);
+                DeepApiModelFacade deepApiModelFacade = DeepApiModelFacade.load(indicator);
                 ApiCallSequence bayouInput = deepApiModelFacade.generateBayouInput(request);
                 System.out.println(bayouInput.getApiMethods());
                 System.out.println(bayouInput.getApiTypes());

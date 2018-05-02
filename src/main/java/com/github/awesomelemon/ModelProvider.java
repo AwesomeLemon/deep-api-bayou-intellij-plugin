@@ -1,7 +1,8 @@
 package com.github.awesomelemon;
 
+import com.github.awesomelemon.deepapi.DeepApiDownloadProgressIndicatorWrapper;
+
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.*;
@@ -18,7 +19,7 @@ public class ModelProvider {
 //    private final String beamOpsWindows = "_beam_search_ops.dll";
     private final String exportedModelDir = "deep-api-model";
 
-    public ModelProvider() {
+    public ModelProvider(DeepApiDownloadProgressIndicatorWrapper progress) {
         try {
             OsCheck.OSType osType = OsCheck.getOperatingSystemType();
             if (!(osType.equals(OsCheck.OSType.Linux) || osType.equals(OsCheck.OSType.Windows)
@@ -27,7 +28,7 @@ public class ModelProvider {
             }
             if (!Files.exists(pluginTmpDir)) {
                 pluginTmpDir.toFile().mkdir();
-                Path path = downloadTo(new URL(modelUrl), Paths.get(pluginTmpDir.toString(), zipName));
+                Path path = download(new URL(modelUrl), Paths.get(pluginTmpDir.toString(), zipName), progress);
                 extractSubDir(path, pluginTmpDir);
             } else {
                 Path modelDir = pluginTmpDir.resolve(exportedModelDir);
@@ -40,7 +41,7 @@ public class ModelProvider {
                 if (!Files.exists(modelDir) /*|| !Files.exists(beamOpPath)*/) {
                     Path zipPath = pluginTmpDir.resolve(zipName);
                     if (!Files.exists(zipPath)) {
-                        zipPath = downloadTo(new URL(modelUrl), Paths.get(pluginTmpDir.toString(), zipName));
+                        zipPath = download(new URL(modelUrl), Paths.get(pluginTmpDir.toString(), zipName), progress);
                     }
                     extractSubDir(zipPath, pluginTmpDir);
                 }
@@ -81,7 +82,7 @@ public class ModelProvider {
         return Paths.get(pluginTmpDir.toString(), exportedModelDir).toString();
     }
 
-    private Path downloadTo(URL url, Path path) throws IOException {
+    private Path download(URL url, Path path, DeepApiDownloadProgressIndicatorWrapper progress) throws IOException {
         path.toFile().getParentFile().mkdirs();
 
         URLConnection conn = url.openConnection();
@@ -95,9 +96,14 @@ public class ModelProvider {
             int count = bis.read(data, 0, 1024);
             while (count != -1) {
                 out.write(data, 0, count);
+                totalCount += count;
+                if (contentLength == 0) {
+                    progress.setFraction(0.0);
+                } else {
+                    progress.setFraction(totalCount / (double) contentLength);
+                }
                 count = bis.read(data, 0, 1024);
             }
-
         }
 
         return path;
