@@ -1,4 +1,6 @@
-package tanvd.bayou.prototype.utils
+package com.github.awesomelemon
+
+/* author: tanvd */
 
 object CodeUtils {
     fun qualifyWithImports(code: String, imports: List<String>): String {

@@ -1,4 +1,4 @@
-package com.github.awesomelemon.Bayou;
+package com.github.awesomelemon.bayou;
 
 import java.util.List;
 

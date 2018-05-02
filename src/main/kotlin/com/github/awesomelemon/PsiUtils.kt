@@ -1,13 +1,13 @@
-package tanvd.bayou.prototype.utils
+package com.github.awesomelemon
+
+/* author: tanvd */
 
 import com.intellij.codeInsight.actions.ReformatCodeProcessor
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
-import com.intellij.psi.JavaPsiFacade
-import com.intellij.psi.PsiCodeBlock
-import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiType
+import com.intellij.psi.*
 import com.intellij.psi.codeStyle.JavaCodeStyleManager
 import com.intellij.psi.util.PsiUtil
 
@@ -20,7 +20,10 @@ object PsiUtils {
     fun createImportsShortenedBlock(qualifiedCode: String, project: Project): PsiCodeBlock {
         val parserFacade = JavaPsiFacade.getInstance(project).parserFacade
         val codeStyleManager = JavaCodeStyleManager.getInstance(project)
-        val codeBlock = codeStyleManager.shortenClassReferences(parserFacade.createCodeBlockFromText(qualifiedCode, null))
+        val codeBlock = ApplicationManager.getApplication().runReadAction<PsiElement> {
+            codeStyleManager.shortenClassReferences(parserFacade.createCodeBlockFromText(qualifiedCode, null))
+        }
+
         return codeBlock as PsiCodeBlock
     }
 

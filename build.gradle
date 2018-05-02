@@ -42,7 +42,7 @@ apply plugin: 'java'
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    compile "tanvd:bayou-implementation:1.2.0"
+    compile "tanvd:bayou-implementation:1.1.0"
     // https://mvnrepository.com/artifact/org.tensorflow/tensorflow
     compile group: 'org.tensorflow', name: 'tensorflow', version: '1.6.0'
 

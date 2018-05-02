@@ -1,4 +1,6 @@
-package com.github.awesomelemon.Bayou
+package com.github.awesomelemon.bayou
+
+/* author: tanvd */
 
 import com.intellij.openapi.progress.ProgressIndicator
 import tanvd.bayou.implementation.facade.SynthesisPhase

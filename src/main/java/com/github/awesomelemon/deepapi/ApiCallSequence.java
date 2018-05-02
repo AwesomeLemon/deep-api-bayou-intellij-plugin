@@ -1,4 +1,4 @@
-package com.github.awesomelemon.DeepAPI;
+package com.github.awesomelemon.deepapi;
 
 import java.util.ArrayList;
 import java.util.List;

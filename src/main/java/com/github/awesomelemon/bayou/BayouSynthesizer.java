@@ -1,4 +1,4 @@
-package com.github.awesomelemon.Bayou;
+package com.github.awesomelemon.bayou;
 
 import com.github.awesomelemon.Utils;
 import tanvd.bayou.implementation.BayouClient;

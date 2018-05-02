@@ -1,4 +1,4 @@
-package com.github.awesomelemon.Bayou;
+package com.github.awesomelemon.bayou;
 
 public enum BayouSynthesizerType {
     Android,

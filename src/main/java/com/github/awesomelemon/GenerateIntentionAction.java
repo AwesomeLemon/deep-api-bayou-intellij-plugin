@@ -1,8 +1,8 @@
 package com.github.awesomelemon;
 
-import com.github.awesomelemon.Bayou.BayouModelFacade;
-import com.github.awesomelemon.DeepAPI.ApiCallSequence;
-import com.github.awesomelemon.DeepAPI.DeepApiModelFacade;
+import com.github.awesomelemon.bayou.BayouModelFacade;
+import com.github.awesomelemon.deepapi.ApiCallSequence;
+import com.github.awesomelemon.deepapi.DeepApiModelFacade;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.formatting.WhiteSpace;
@@ -42,35 +42,14 @@ public class GenerateIntentionAction extends PsiElementBaseIntentionAction imple
 
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, @Nullable PsiElement element) {
-        if (element == null) return false;
+        if (element == null || getContainingMethod(element) == null) return false;
+
         PsiComment comment = asComment(element);
-        if (comment == null) return false;
-//        if (!element.isWritable()) return false;
-
-//        PsiElement comment = PsiTreeUtil.skipSiblingsBackward(currentPosition, PsiWhiteSpace.class);
-        if (comment.getText().startsWith(INTENTION_PREFIX)) {
-            return true;
-        }
-
-
-//        if (element instanceof PsiJavaToken) {
-//            final PsiJavaToken token = (PsiJavaToken) element;
-//            if (token.getTokenType() != JavaTokenType.QUEST) return false;
-//            if (token.getParent() instanceof PsiConditionalExpression) {
-//                final PsiConditionalExpression conditionalExpression = (PsiConditionalExpression) token.getParent();
-//                if (conditionalExpression.getThenExpression() == null
-//                        || conditionalExpression.getElseExpression() == null) {
-//                    return false;
-//                }
-//                return true;
-//            }
-//            return false;
-//        }
-        return false;
+        return comment != null;
     }
 
     private PsiMethod getContainingMethod(PsiElement element) {
-        while (!(element instanceof PsiMethod)) element = element.getParent();
+        while (element != null && !(element instanceof PsiMethod)) element = element.getParent();
         return (PsiMethod) element;
     }
 
@@ -103,16 +82,17 @@ public class GenerateIntentionAction extends PsiElementBaseIntentionAction imple
         System.out.println(bayouInput.getApiMethods());
         System.out.println(bayouInput.getApiTypes());
         ProgressManager instance = ProgressManager.getInstance();
-        instance.run(new Task.Modal(project, "Abc", true) {
+        PsiMethod containingMethod = getContainingMethod(comment);
+        instance.run(new Task.Backgroundable(project, "Abc", true) {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
-                new BayouModelFacade(project, bayouInput, getContainingMethod(comment)).run();
+                new BayouModelFacade(project, bayouInput, containingMethod).run();
             }
         });
         System.out.println("done!");
     }
 
     public boolean startInWriteAction() {
-        return true;
+        return false;
     }
 }

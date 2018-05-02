@@ -1,8 +1,6 @@
-package com.github.awesomelemon.Bayou
+package com.github.awesomelemon.bayou
 
-//import tanvd.bayou.prototype.synthesizer.BayouRequest
-//import tanvd.bayou.prototype.synthesizer.BayouResponse
-//import tanvd.bayou.prototype.utils.first
+/* author: tanvd */
 
 object BayouTextConverter {
     private val import = "import edu.rice.cs.caper.bayou.annotations.Evidence;"
