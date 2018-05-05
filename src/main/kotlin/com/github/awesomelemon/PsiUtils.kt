@@ -14,7 +14,9 @@ import com.intellij.psi.util.PsiUtil
 object PsiUtils {
     fun createCodeBlock(code: String, project: Project): PsiCodeBlock {
         val parserFacade = JavaPsiFacade.getInstance(project).parserFacade
-        return parserFacade.createCodeBlockFromText(code, null)
+        return ApplicationManager.getApplication().runReadAction<PsiCodeBlock> {
+            parserFacade.createCodeBlockFromText(code, null)
+        }
     }
 
     fun createImportsShortenedBlock(qualifiedCode: String, project: Project): PsiCodeBlock {
