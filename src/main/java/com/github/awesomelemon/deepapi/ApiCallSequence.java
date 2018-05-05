@@ -1,6 +1,7 @@
 package com.github.awesomelemon.deepapi;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class ApiCallSequence {
@@ -22,18 +23,23 @@ public class ApiCallSequence {
 
     public ApiCallSequence(String apiSequence) {
         String[] separatedCalls = apiSequence.split(" ");
-        ArrayList<String> apiTypes = new ArrayList<>();
-        ArrayList<String> apiMethods = new ArrayList<>();
+        HashSet<String> apiTypes = new HashSet<>();
+        HashSet<String> apiMethods = new HashSet<>();
         for (String separatedCall : separatedCalls) {
             String[] typeAndMethod = separatedCall.split("\\.");
             assert typeAndMethod.length == 2;
-            apiTypes.add(typeAndMethod[0]);
+            if (!(typeAndMethod[0].equals("List") || typeAndMethod[0].equals("ArrayList")
+                    || typeAndMethod[0].equals("LinkedList") || typeAndMethod[0].equals("String"))) {
+                if (apiTypes.size() >= 3) continue;
+                apiTypes.add(typeAndMethod[0]);
+            }
             if (!typeAndMethod[1].equals("new")) {
+                if (apiMethods.size() >= 3) continue;
                 apiMethods.add(typeAndMethod[1]);
             }
         }
-        this.apiMethods = apiMethods;
-        this.apiTypes = apiTypes;
+        this.apiMethods = new ArrayList<>(apiMethods);
+        this.apiTypes = new ArrayList<>(apiTypes);
     }
 
 }

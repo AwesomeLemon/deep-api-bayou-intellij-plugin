@@ -1,18 +1,17 @@
 <idea-plugin>
     <id>com.github.awesomelemon.deep-api-plugin</id>
-    <name>Code generation</name>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <name>Java API code generation</name>
+    <vendor email="a.e.chebykin@gmail.com" url="http://www.github.com/AwesomeLemon">AwesomeLemon</vendor>
 
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
+    Java code generation from natural language requests using DeepAPI and Bayou algorithms
     ]]></description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
-    <!-- uncomment to enable plugin in all products
-    <depends>com.intellij.modules.lang</depends>
-    -->
+    <!-- uncomment to enable plugin in all products -->
+    <depends>com.intellij.modules.java</depends>
+
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
     <idea-version since-build="162"/>
 
@@ -25,10 +24,10 @@
         </intentionAction>
     </extensions>
 
-    <actions>
-        <group id="MyPlugin.SampleMenu" text="Greeting" description="Greeting menu">
-            <add-to-group group-id="MainMenu" anchor="last"/>
-            <action id="Myplugin.Textboxes" class="com.github.awesomelemon.HelloAction" text="Hello" description="Says hello"/>
-        </group>
-    </actions>
+    <!--<actions>-->
+        <!--<group id="MyPlugin.SampleMenu" text="Greeting" description="Greeting menu">-->
+            <!--<add-to-group group-id="MainMenu" anchor="last"/>-->
+            <!--<action id="Myplugin.Textboxes" class="com.github.awesomelemon.HelloAction" text="Hello" description="Says hello"/>-->
+        <!--</group>-->
+    <!--</actions>-->
 </idea-plugin>

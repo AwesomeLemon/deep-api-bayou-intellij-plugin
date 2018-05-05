@@ -36,7 +36,7 @@ public class DeepApiModelFacade {
 
     private String generate(String input) {
 //        if (true) return input;
-        String[] tokens = input.split(" ");
+        String[] tokens = input.replaceAll("[^a-zA-Z ]", "").toLowerCase().split("\\s+");
         byte[][][] matrix = new byte[1][tokens.length][];
         for (int i = 0; i < tokens.length; i++) {
             try {

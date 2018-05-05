@@ -12,7 +12,7 @@ import java.util.Locale;
 public class ModelProvider {
     private final String tmpDir = System.getProperty("java.io.tmpdir");
     private final Path pluginTmpDir = Paths.get(tmpDir, "deep_api_plugin");
-    private final String modelUrl = "https://www.dropbox.com/s/qh4kh6yy7d4jm2q/deep-api-tensorflow-modelA.zip?dl=1";
+    private final String modelUrl = "https://www.dropbox.com/s/g8nc7v033xypbgv/deep-api-model.zip?dl=1";
     final String zipName = "model.zip";
 //    private final String beamOpsLinux = "_beam_search_ops_linux.so";
 //    private final String beamOpsMacos = "_beam_search_ops_macos.so";
@@ -29,6 +29,7 @@ public class ModelProvider {
             if (!Files.exists(pluginTmpDir)) {
                 pluginTmpDir.toFile().mkdir();
                 Path path = download(new URL(modelUrl), Paths.get(pluginTmpDir.toString(), zipName), progress);
+                progress.setText("Extracting archive");
                 extractSubDir(path, pluginTmpDir);
             } else {
                 Path modelDir = pluginTmpDir.resolve(exportedModelDir);

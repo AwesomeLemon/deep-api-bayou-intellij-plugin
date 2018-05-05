@@ -11,9 +11,11 @@ public class DeepApiDownloadProgressIndicatorWrapper {
         progressIndicator.setText("Downloading DeepAPI model");
         progressIndicator.setFraction(0.0);
     }
-
     public void setFraction(double fraction) {
         this.fraction = fraction;
         progressIndicator.setFraction(fraction);
+    }
+    public void setText(String text) {
+        progressIndicator.setText(text);
     }
 }

@@ -42,7 +42,7 @@ public class BayouModelFacade implements Runnable {
 //
 //    }
 
-    public boolean processMethodChe(PsiMethod method, ApiCallSequence apiCallSequence, ProgressIndicator indicator) {
+    public boolean invokeBayou(PsiMethod method, ApiCallSequence apiCallSequence, ProgressIndicator indicator) {
         BayouSynthesizerType model = BayouSynthesizerType.StdLib;
 //        BayouSynthesizerType model = BayouSynthesizerType.Android;
 
@@ -56,7 +56,7 @@ public class BayouModelFacade implements Runnable {
         List<BayouRequest.InputParameter> inputParams = new ArrayList<>();
         ReadAction.run(() -> getMethodInputParameters(method, inputParams));
 
-        if (!apiCallSequence.getApiMethods().isEmpty()) {
+//        if (!apiCallSequence.getApiMethods().isEmpty()) {
             BayouResponse response = BayouSynthesizer.get().invoke(model, new BayouRequest(inputParams, apiCallSequence),
                     new BayouProgressIndicatorWrapper(indicator));
             final PsiCodeBlock codeBlock;
@@ -66,7 +66,7 @@ public class BayouModelFacade implements Runnable {
                 String qualifiedCode = CodeUtils.INSTANCE.qualifyWithImports(code, imports);
                 codeBlock = PsiUtils.INSTANCE.createImportsShortenedBlock("{\n " + qualifiedCode + " \n}", project);
             } else {
-                codeBlock = PsiUtils.INSTANCE.createCodeBlock("{\n // Something went wrong. Try again with other params.\n}", project);
+                codeBlock = PsiUtils.INSTANCE.createCodeBlock("{\n // Something went wrong. Please try again with other input.\n}", project);
             }
             ApplicationManager.getApplication().invokeLater(() ->
                     PsiUtils.INSTANCE.executeWriteAction(project, method.getContainingFile(), () -> {
@@ -76,7 +76,7 @@ public class BayouModelFacade implements Runnable {
                                 return Unit.INSTANCE;
                             }
                     ));
-        }
+//        }
         return false;
     }
 
@@ -91,10 +91,7 @@ public class BayouModelFacade implements Runnable {
     @Override
     public void run() {
         ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
-        indicator.setText2("that");
-        indicator.setText("this");
-        indicator.setFraction(0.5);
-        processMethodChe(method, input, indicator);
+        invokeBayou(method, input, indicator);
     }
 
 }
