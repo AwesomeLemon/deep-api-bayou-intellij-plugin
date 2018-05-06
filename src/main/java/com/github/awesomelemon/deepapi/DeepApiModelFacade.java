@@ -16,20 +16,12 @@ public class DeepApiModelFacade {
 
     private DeepApiModelFacade(ProgressIndicator progressIndicator) {
         ModelProvider modelProvider = new ModelProvider(new DeepApiDownloadProgressIndicatorWrapper(progressIndicator));
-//        TensorFlow.loadLibrary(modelProvider.getBeamOpsPath());
         model = SavedModelBundle.load(modelProvider.getExportedModelPath(), "serve");
     }
 
     public static DeepApiModelFacade load(ProgressIndicator progressIndicator) {
         if (INSTANCE == null) {
-//            ProgressManager instance = ProgressManager.getInstance();
-//            instance.run(new Task.Backgroundable(project, "DeepAPI Model Download", true) {
-//                @Override
-//                public void run(@NotNull ProgressIndicator indicator) {
-                    INSTANCE = new DeepApiModelFacade(progressIndicator);
-//                    ApplicationManager.getApplication().invokeLater()
-//                }
-//            });
+            INSTANCE = new DeepApiModelFacade(progressIndicator);
         }
         return INSTANCE;
     }
@@ -79,8 +71,7 @@ public class DeepApiModelFacade {
         return null;
     }
 
-    public ApiCallSequence generateBayouInput(String input) {
-        String apiCallSequence = generate(input);
-        return new ApiCallSequence(apiCallSequence);
+    public ApiCallSequence generateApiCallSequence(String request) {
+        return new ApiCallSequence(generate(request));
     }
 }

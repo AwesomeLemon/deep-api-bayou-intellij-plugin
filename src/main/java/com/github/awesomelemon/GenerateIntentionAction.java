@@ -6,6 +6,7 @@ import com.github.awesomelemon.deepapi.DeepApiModelFacade;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.formatting.WhiteSpace;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -14,6 +15,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
+import kotlin.Unit;
 import org.jetbrains.annotations.*;
 
 public class GenerateIntentionAction extends PsiElementBaseIntentionAction implements IntentionAction {
@@ -78,12 +80,17 @@ public class GenerateIntentionAction extends PsiElementBaseIntentionAction imple
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
                 DeepApiModelFacade deepApiModelFacade = DeepApiModelFacade.load(indicator);
-                ApiCallSequence bayouInput = deepApiModelFacade.generateBayouInput(request);
+                ApiCallSequence bayouInput = deepApiModelFacade.generateApiCallSequence(request);
                 System.out.println(bayouInput.getApiMethods());
                 System.out.println(bayouInput.getApiTypes());
-                new BayouModelFacade(project, bayouInput, containingMethod).run();
+                PsiCodeBlock psiCodeBlock = BayouModelFacade.invokeBayou(project, containingMethod, bayouInput);
+                PsiUtils.INSTANCE.executeWriteAction(project, containingMethod.getContainingFile(), () -> {
+                            PsiCodeBlock body = containingMethod.getBody();
+                            if (body != null) body.add(psiCodeBlock);
+                            PsiUtils.INSTANCE.reformatFile(containingMethod.getContainingFile(), project);
+                            return Unit.INSTANCE;
+                        });
             }
         });
-        System.out.println("done!");
     }
 }
