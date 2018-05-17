@@ -1,7 +1,5 @@
 package com.github.awesomelemon
 
-/* author: tanvd */
-
 import com.intellij.codeInsight.actions.ReformatCodeProcessor
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runReadAction
