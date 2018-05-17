@@ -21,11 +21,11 @@ public class ModelProvider {
 
     public ModelProvider(DeepApiDownloadProgressIndicatorWrapper progress) {
         try {
-            OsCheck.OSType osType = OsCheck.getOperatingSystemType();
-            if (!(osType.equals(OsCheck.OSType.Linux) || osType.equals(OsCheck.OSType.Windows)
-                    || osType.equals(OsCheck.OSType.MacOS))) {
-                throw new RuntimeException("Only Windows, Linux, MacOS are supported!");
-            }
+//            OsCheck.OSType osType = OsCheck.getOperatingSystemType();
+//            if (!(osType.equals(OsCheck.OSType.Linux) || osType.equals(OsCheck.OSType.Windows)
+//                    || osType.equals(OsCheck.OSType.MacOS))) {
+//                throw new RuntimeException("Only Windows, Linux, MacOS are supported!");
+//            }
             if (!Files.exists(pluginTmpDir)) {
                 pluginTmpDir.toFile().mkdir();
                 Path path = download(new URL(modelUrl), Paths.get(pluginTmpDir.toString(), zipName), progress);

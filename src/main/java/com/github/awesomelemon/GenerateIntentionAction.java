@@ -21,7 +21,6 @@ import org.jetbrains.annotations.*;
 public class GenerateIntentionAction extends PsiElementBaseIntentionAction implements IntentionAction {
 
     private static final String INTENTION_PREFIX = "//";
-    private BayouModelFacade bayouModelFacade;
 
     @NotNull
     public String getText() {
@@ -55,25 +54,9 @@ public class GenerateIntentionAction extends PsiElementBaseIntentionAction imple
     }
 
     public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException {
-//        ProgressManager.getInstance().run(new Task.Backgroundable(project, "daf") {
-//            public void run(ProgressIndicator indicator) {
-//                indicator.setText("5 kilos of mushrooms and cellphone");
-//                try {
-//                    Thread.sleep(2000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                indicator.setFraction(0.5);  // halfway done
-//                try {
-//                    Thread.sleep(2000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
         PsiComment comment = asComment(element);
         String request = comment.getText().substring(INTENTION_PREFIX.length());
-        System.out.println(request);
+//        System.out.println(request);
         PsiMethod containingMethod = getContainingMethod(comment);
 
         ProgressManager.getInstance().run(new Task.Backgroundable(project, "DeepAPI-Bayou Code Generation", true) {
@@ -81,8 +64,8 @@ public class GenerateIntentionAction extends PsiElementBaseIntentionAction imple
             public void run(@NotNull ProgressIndicator indicator) {
                 DeepApiModelFacade deepApiModelFacade = DeepApiModelFacade.load(indicator);
                 ApiCallSequence bayouInput = deepApiModelFacade.generateApiCallSequence(request);
-                System.out.println(bayouInput.getApiMethods());
-                System.out.println(bayouInput.getApiTypes());
+//                System.out.println(bayouInput.getApiMethods());
+//                System.out.println(bayouInput.getApiTypes());
                 PsiCodeBlock psiCodeBlock = BayouModelFacade.invokeBayou(project, containingMethod, bayouInput);
                 PsiUtils.INSTANCE.executeWriteAction(project, containingMethod.getContainingFile(), () -> {
                             PsiCodeBlock body = containingMethod.getBody();

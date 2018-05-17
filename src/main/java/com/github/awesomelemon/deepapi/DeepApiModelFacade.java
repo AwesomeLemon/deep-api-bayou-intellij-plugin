@@ -35,6 +35,7 @@ public class DeepApiModelFacade {
                 matrix[0][i] = tokens[i].getBytes("UTF-8");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
         Tensor<String> inputCallsTensor = Tensor.create(matrix, String.class);
@@ -72,6 +73,8 @@ public class DeepApiModelFacade {
     }
 
     public ApiCallSequence generateApiCallSequence(String request) {
-        return new ApiCallSequence(generate(request));
+        String generated = generate(request);
+        if (generated == null) throw new RuntimeException("DeepAPI could not generate any sequences");
+        return new ApiCallSequence(generated);
     }
 }

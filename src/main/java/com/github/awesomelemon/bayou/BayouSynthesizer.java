@@ -27,8 +27,8 @@ public class BayouSynthesizer {
 
     BayouResponse invoke(BayouSynthesizerType type, BayouRequest request, SynthesisProgress progress) {
         if (!models.containsKey(type)) {
-            System.out.println("not contains");
-            System.out.println(type.name().toLowerCase()+"/config.json");
+//            System.out.println("not contains");
+//            System.out.println(type.name().toLowerCase()+"/config.json");
             SynthesizingModel model = BayouClient.INSTANCE.getConfigurableModel(
                     Utils.convertStreamToString(
                             BayouSynthesizer.class.getResourceAsStream("/" + type.name().toLowerCase()+"/config.json")));
